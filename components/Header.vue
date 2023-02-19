@@ -1,7 +1,7 @@
 <template>
     <section>
         <PaddingX class="header">
-            <h1 class="header-item neon-sign">TWITTER GPT</h1>
+            <h1 class="header-item neon-sign">Artelligence</h1>
         </PaddingX>
     </section>
 </template>

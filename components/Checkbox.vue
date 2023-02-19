@@ -50,9 +50,9 @@
         width: 24px;
         height: 24px;
         transition: background-color 250ms ease-in-out, 
-                        transform 250ms ease-in-out, 
-                        box-shadow 250ms ease-in-out,
-                        color 250ms ease-in-out;
+                    transform 250ms ease-in-out, 
+                    box-shadow 250ms ease-in-out,
+                    color 250ms ease-in-out;
         border-radius: 6px;
     }
 
