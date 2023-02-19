@@ -18,12 +18,23 @@
 </script>
 
 <style lang="scss">
+    @keyframes slidein {
+        from {
+            transform: translate(0, 1600px);
+        }
+
+        to {
+            transform: translate(0, 0);
+        }
+    }
+
     .prompt-section {
         border: solid 1px gray;
         margin-top: 24px;
         padding-bottom: 24px;
         padding-top: 0;
         border-radius: 6px;
+        animation: 1000ms ease-in-out slidein;
         
         .prompt-title {
             background-color: black;

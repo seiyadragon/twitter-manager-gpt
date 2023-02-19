@@ -4,6 +4,7 @@
         <PaddingX>
             <slot/>
         </PaddingX>
+        <Footer />
     </main>
 </template>
 
@@ -62,6 +63,14 @@
     
     ::-webkit-scrollbar-thumb:hover {
       background-color: rgb(0, 0, 0);
+    }
+
+    main {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 
 </style>

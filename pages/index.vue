@@ -12,7 +12,7 @@
             <p class="error">{{ errorMessage }}</p>
         </Box>
         <div v-for="res in responses">
-            <Tweet :res="res" @tweetDeleted="deleteTweet" @tweetRegenerated="regenerateTweet"/>
+            <Tweet :res="res" @tweetDeleted="deleteTweet" @tweetRegenerated="regenerateTweet" @tweetEdited="editTweet"/>
         </div>
     </section>
 </template>
@@ -61,6 +61,8 @@
                     if (res.prompt === response.prompt) 
                         this.responses.splice(index, 1)
                 })
+
+                this.updateLocalStorage()
             },
             regenerateTweet(data: any) {
                 this.responses.map((response, index) => {
@@ -68,6 +70,22 @@
                         this.responses[index] = data
                     }
                 })
+
+                this.updateLocalStorage()
+            },
+            updateLocalStorage() {
+                if (process.client) {
+                    localStorage.setItem('tweets', JSON.stringify(this.responses))
+                }
+            },
+            editTweet({text, res}: any) {
+                this.responses.map((response, index) => {
+                    if (res.prompt === response.prompt) {
+                        this.responses[index].response = text
+                    }
+                })
+
+                this.updateLocalStorage()
             },
         },
         data() {

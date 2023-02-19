@@ -1,6 +1,6 @@
 <template>
     <Box :title="res.prompt">
-        <p :contenteditable="isEditable" class="tweet-text" :class="isEditable ? 'edit' : ''">{{ res.response }}</p>
+        <p ref="tweetBody" :contenteditable="isEditable" class="tweet-text" :class="isEditable ? 'edit' : ''">{{ res.response }}</p>
         <div class="tweet-buttons">
             <a :href="`https://twitter.com/intent/tweet?text=${res.response}`" data-size="large" class="tweet-button">
                 <Button class="button">
@@ -18,7 +18,7 @@
                 </Button>
             </div>
             <div class="tweet-button">
-                <Button class="button" @click="() => isEditable = !isEditable">
+                <Button class="button" @click="() => {isEditable = !isEditable; $emit('tweetEdited', {text: ($refs.tweetBody as HTMLDivElement).innerText, res: res})}">
                     <Icon name="ion:edit" />
                 </Button>
             </div>
@@ -82,7 +82,15 @@
                     let tweets = localStorage.getItem('tweets')
                     let tweetsParsed = JSON.parse(tweets !== null ? tweets : "[]") as Array<any>;
                     
-                    console.log(tweetsParsed)
+                    let shouldStop = false
+
+                    tweetsParsed.map((tweet) => {
+                        if (tweet.prompt.toString() === this.res.prompt.toString())
+                            shouldStop = true
+                    })
+
+                    if (shouldStop)
+                        return
                     
                     tweetsParsed.push(this.res)
 
