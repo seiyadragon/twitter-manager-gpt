@@ -23,13 +23,11 @@
 
 <style lang="scss">
     .footer {
-        background-color: black;
         margin-top: 28px;
         
         .footer-padding {
             padding-top: 1px;
             padding-bottom: 1px;
-            color: white;
             display: flex;
             justify-content: space-between;
 

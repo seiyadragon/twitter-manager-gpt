@@ -15,6 +15,7 @@
     "nuxt-icon": "^0.2.11"
   },
   "dependencies": {
+    "@vercel/analytics": "^0.1.10",
     "openai": "^3.1.0",
     "sass": "^1.58.1"
   }
