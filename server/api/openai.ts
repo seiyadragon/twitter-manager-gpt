@@ -1,6 +1,15 @@
 import { Configuration, OpenAIApi } from "openai";
 
 export default defineEventHandler(async (event) => {
+    let {passed} = await $fetch("/api/limiter")
+
+    if (!passed) 
+        return {
+            prompt: "Limit reached",
+            options: {thread: false, hashtags: false, emojis: false},
+            response: "The rate limit for the day has been reached!",
+        }
+
     let openaiKey = process.env.OPENAIKEY
     let { prompt, hashtags, thread, emojis, temperature } = getQuery(event)
 
