@@ -11,12 +11,14 @@ export default defineEventHandler(async (event) => {
         }
 
     let openaiKey = process.env.OPENAIKEY
-    let { prompt, hashtags, thread, emojis, temperature } = getQuery(event)
+    let { prompt, hashtags, thread, emojis, temperature, reply, links } = getQuery(event)
 
     const finalPrompt = `Write a 
                         ${thread === 'true' ? 'twitter thread' : 'tweet'} 
+                        ${reply === 'true' ? 'reply to the following' : ''} 
                         ${hashtags === 'true' ? '' : 'do not'} use hashtags, 
                         ${emojis === 'true' ? '' : 'do not'} use emojis. 
+                        ${links === 'true' ? '' : 'do not'} use links.
                         ${prompt} `
 
     const configuration = new Configuration({
@@ -34,7 +36,7 @@ export default defineEventHandler(async (event) => {
 
     return {
         prompt: prompt,
-        options: {thread, hashtags, emojis},
-        response: completion.data.choices[0].text,
+        options: {thread, hashtags, emojis, reply, temperature, links},
+        response: completion.data.choices[0].text + (temperature === '1' ? ' 🔥 ' : ''),
     }
 })

@@ -22,6 +22,8 @@ export default defineEventHandler(async (event) => {
           arl[0].data.lastReqTime = new Date().getTime()
         }
 
+        console.log(new Date().getTime() - arl[0].data.lastReqTime)
+
         await supabase
         .from('ArtelligenceRateLimit')
         .update({data: {requests: arl[0].data.requests, lastReqTime: arl[0].data.lastReqTime}})

@@ -37,6 +37,8 @@
 </template>
 
 <script lang="ts">
+    import { defaultOptions, Options, openAIFetch } from '~~/pages/index.vue'
+
     export default {
         props: [
             'res',
@@ -46,29 +48,45 @@
                 navigator.clipboard.writeText(this.res.response)
             },
             async regenerateTweet() {
-                let { data } = await useFetch(`/api/openai?prompt=${this.res.prompt}&hashtags=${this.res.options.hashtags}&thread=${this.res.options.thread}&emojis=${this.res.options.emojis}`)
+                this.$emit('tweetRegenStart', this.res.prompt)
+
+                let { data } = await openAIFetch(this.res.prompt, {
+                    thread: this.res.thread,
+                    hashtags: this.res.hashtags,
+                    emojis: this.res.emojis,
+                    temperature: this.res.temperature,
+                    reply: this.res.reply,
+                    links: this.res.links,
+                })
                 let builtData = {
                     prompt: (data.value?.prompt)?.toString(),
-                    options: (data.value?.options) as {thread: string, hashtags: string, emojis: string},
+                    options: (data.value?.options) as Options,
                     response: (data.value?.response)?.toString(),
                 }
                 let definedData = {
                     prompt: builtData.prompt !== undefined ? builtData.prompt : "",
-                    options: builtData.options !== undefined ? builtData.options : {thread: "false", hashtags: "false", emojis: "false"},
+                    options: builtData.options !== undefined ? builtData.options : defaultOptions,
                     response: builtData.response !== undefined ? builtData.response : "",
                 }
                 let counter = 0
 
                 while (this.res.response === definedData.response) {
-                    let { data } = await useFetch(`/api/openai?prompt=${this.res.prompt}&hashtags=${this.res.options.hashtags}&thread=${this.res.options.thread}&emojis=${this.res.options.emojis}&temperature=${counter}`)
+                    let { data } = await openAIFetch(this.res.prompt, {
+                        thread: this.res.thread,
+                        hashtags: this.res.hashtags,
+                        emojis: this.res.emojis,
+                        temperature: this.res.temperature,
+                        reply: this.res.reply,
+                        links: this.res.links,
+                    })
                     builtData = {
                         prompt: (data.value?.prompt)?.toString(),
-                        options: (data.value?.options) as {thread: string, hashtags: string, emojis: string},
+                        options: (data.value?.options) as Options,
                         response: (data.value?.response)?.toString(),
                     }
                     definedData = {
                         prompt: builtData.prompt !== undefined ? builtData.prompt : "",
-                        options: builtData.options !== undefined ? builtData.options : {thread: "false", hashtags: "false", emojis: "false"},
+                        options: builtData.options !== undefined ? builtData.options : defaultOptions,
                         response: builtData.response !== undefined ? builtData.response : "",
                     }
 
@@ -83,18 +101,19 @@
                     let tweetsParsed = JSON.parse(tweets !== null ? tweets : "[]") as Array<any>;
                     
                     let shouldStop = false
+                    let newTweets = [] as Array<number>
 
                     tweetsParsed.map((tweet) => {
-                        if (tweet.prompt.toString() === this.res.prompt.toString())
+                        if (tweet.prompt === this.res.prompt) 
                             shouldStop = true
+                        else
+                            newTweets.push(tweet)
                     })
 
-                    if (shouldStop)
-                        return
-                    
-                    tweetsParsed.push(this.res)
+                    if (!shouldStop)
+                        newTweets.push(this.res)
 
-                    localStorage.setItem('tweets', JSON.stringify(tweetsParsed))
+                    localStorage.setItem('tweets', JSON.stringify(newTweets))
                 }
             },
         },
