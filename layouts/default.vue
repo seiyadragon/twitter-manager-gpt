@@ -1,8 +1,8 @@
 <template>
     <main>
-        <Header @addClick="onAddClick"/>
+        <Header />
         <PaddingX>
-            <slot/>
+            <slot />
         </PaddingX>
         <Footer />
     </main>
@@ -11,13 +11,10 @@
 <script lang="ts">
     export default {
         methods: {
-            onAddClick() {
-                this.isMenuOpen = !this.isMenuOpen
-            },
         },
         data() {
             return {
-                isMenuOpen: false,
+                
             }
         },
     }
@@ -47,6 +44,7 @@
     body {
         margin: 0;
         font-family: 'Ubuntu';
+        overflow-x: hidden;
     }
 
     ::-webkit-scrollbar {

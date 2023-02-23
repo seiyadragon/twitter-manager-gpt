@@ -1,5 +1,5 @@
 <template>
-    <section class="prompt-section">
+    <section :class="closing === true ? 'prompt-section-closing' : 'prompt-section'">
         <div class="prompt-title">
             <h1>{{ title }}</h1>
         </div>
@@ -13,28 +13,38 @@
     export default {
         props: {
             title: String,
+            closing: Boolean,
         }
     }
 </script>
 
 <style lang="scss">
-    @keyframes slidein {
+    @keyframes scalein {
         from {
-            transform: translate(0, 1600px);
+            transform: scale(0.01, 0.01);
         }
 
         to {
-            transform: translate(0, 0);
+            transform: scale(1, 1);
         }
     }
 
-    .prompt-section {
+    @keyframes scaleout {
+        from {
+            transform: scale(1, 1);
+        }
+
+        to {
+            transform: scale(0.01, 0.01);
+        }
+    }
+
+    .prompt-section, .prompt-section-closing {
         border: solid 1px gray;
         margin-top: 24px;
         padding-bottom: 24px;
         padding-top: 0;
         border-radius: 6px;
-        animation: 1000ms ease-in-out slidein;
         
         .prompt-title {
             background-color: black;
@@ -72,6 +82,13 @@
                 }
             }
         }
+    }
 
+    .prompt-section {
+        animation: 250ms ease-in-out scalein;
+    }
+
+    .prompt-section-closing {
+        animation: 250ms ease-in-out scaleout;
     }
 </style>

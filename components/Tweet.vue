@@ -1,9 +1,9 @@
 <template>
-    <Box :title="res.prompt">
+    <Box :title="res.prompt" :closing="closing">
         <p ref="tweetBody" :contenteditable="isEditable" class="tweet-text" :class="isEditable ? 'edit' : ''">{{ res.response }}</p>
         <div class="tweet-buttons">
             <a :href="`https://twitter.com/intent/tweet?text=${res.response}`" data-size="large" class="tweet-button">
-                <Button class="button">
+                <Button class="button" @click="tweetTweet">
                     <Icon name="ion:logo-twitter" />
                 </Button>
             </a>
@@ -18,7 +18,7 @@
                 </Button>
             </div>
             <div class="tweet-button">
-                <Button class="button" @click="() => {isEditable = !isEditable; $emit('tweetEdited', {text: ($refs.tweetBody as HTMLDivElement).innerText, res: res})}">
+                <Button class="button" @click="editTweet">
                     <Icon name="ion:edit" />
                 </Button>
             </div>
@@ -28,7 +28,7 @@
                 </Button>
             </div>
             <div class="tweet-button">
-                <Button class="button" @click="() => $emit('tweetDeleted', res)">
+                <Button class="button" @click="onClose">
                     <Icon name="ion:close" />
                 </Button>
             </div>
@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-    import { defaultOptions, Options, openAIFetch } from '~~/pages/index.vue'
+    import { defaultOptions, Options, openAIFetch, getPositiveNotification, getNegativeNotification } from '~~/util/Util'
 
     export default {
         props: [
@@ -46,54 +46,57 @@
         methods: {
             onCopyClick() {
                 navigator.clipboard.writeText(this.res.response)
+
+                this.$emit('notification', getPositiveNotification('Tweet copied!'))
             },
             async regenerateTweet() {
+                let lastResponse = this.res.response
                 this.$emit('tweetRegenStart', this.res.prompt)
+                this.$emit('notification', getPositiveNotification('Tweet regeneration started!'))
 
-                let { data } = await openAIFetch(this.res.prompt, {
-                    thread: this.res.thread,
-                    hashtags: this.res.hashtags,
-                    emojis: this.res.emojis,
-                    temperature: this.res.temperature,
-                    reply: this.res.reply,
-                    links: this.res.links,
-                })
+                let { data } = await openAIFetch(this.res.prompt, this.res.options)
+                let response = (data.value?.response)?.toString()
                 let builtData = {
-                    prompt: (data.value?.prompt)?.toString(),
-                    options: (data.value?.options) as Options,
-                    response: (data.value?.response)?.toString(),
+                    prompt: this.res.prompt,
+                    options: this.res.options,
+                    response: response !== undefined ? response : "",
                 }
-                let definedData = {
-                    prompt: builtData.prompt !== undefined ? builtData.prompt : "",
-                    options: builtData.options !== undefined ? builtData.options : defaultOptions,
-                    response: builtData.response !== undefined ? builtData.response : "",
-                }
+
+                console.log(this.res.response)
+                console.log(builtData.response)
+
                 let counter = 0
 
-                while (this.res.response === definedData.response) {
-                    let { data } = await openAIFetch(this.res.prompt, {
-                        thread: this.res.thread,
-                        hashtags: this.res.hashtags,
-                        emojis: this.res.emojis,
-                        temperature: this.res.temperature,
-                        reply: this.res.reply,
-                        links: this.res.links,
+                while (lastResponse === builtData.response) {
+                    console.log(builtData.response.toString())
+
+                    let { data } = await openAIFetch(this.res.prompt, counter < 3 ? this.res.options : {
+                        thread: this.res.options.thread, 
+                        hashtags: this.res.options.hashtags, 
+                        emojis: this.res.options.emojis, 
+                        temperature: '1', 
+                        reply: this.res.options.reply, 
+                        links: this.res.options.links
                     })
+
+                    let response = (data.value?.response)?.toString()
+
                     builtData = {
-                        prompt: (data.value?.prompt)?.toString(),
-                        options: (data.value?.options) as Options,
-                        response: (data.value?.response)?.toString(),
-                    }
-                    definedData = {
-                        prompt: builtData.prompt !== undefined ? builtData.prompt : "",
-                        options: builtData.options !== undefined ? builtData.options : defaultOptions,
-                        response: builtData.response !== undefined ? builtData.response : "",
+                        prompt: this.res.prompt,
+                        options: this.res.options,
+                        response: response !== undefined ? response : "",
                     }
 
-                    counter++
+                    if (counter > 6) 
+                        break
+
+                    counter++ 
                 }
 
-                this.$emit('tweetRegenerated', definedData)
+                this.$emit('tweetRegenerated', builtData)
+                this.$emit('notification', getPositiveNotification('Tweet regenerated!'))
+
+                console.log(this.res.response)
             },
             saveTweet() {
                 if (process.client) {
@@ -114,12 +117,33 @@
                         newTweets.push(this.res)
 
                     localStorage.setItem('tweets', JSON.stringify(newTweets))
+                    this.$emit('notification', getPositiveNotification('Tweet saved!'))
                 }
+            },
+            async onClose() {
+                this.closing = true
+                this.$emit('notification', getNegativeNotification('Tweet removed!'))
+
+                setTimeout(() => {
+                    this.$emit('tweetDeleted', this.res)
+                    this.closing = false
+                }, 250)
+            },
+            editTweet() {
+                this.isEditable = !this.isEditable
+                this.$emit('tweetEdited', {text: (this.$refs.tweetBody as HTMLDivElement).innerText, res: this.res})
+
+                if (!this.isEditable)
+                    this.$emit('notification', getPositiveNotification('Tweed edited!'))
+            },
+            tweetTweet() {
+                this.$emit('notification', getPositiveNotification('Tweet tweeted!'))
             },
         },
         data() {
             return {
                 isEditable: false,
+                closing: false,
             }
         },
     }
@@ -138,6 +162,7 @@
         .tweet-button {
             display: block;
             width: 48px;
+            height: 48px;
             padding-top: 0px;
     
             .button {

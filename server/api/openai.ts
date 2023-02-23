@@ -1,16 +1,19 @@
 import { Configuration, OpenAIApi } from "openai";
+import { defaultOptions, Options, openAIFetch } from '~~/util/Util';
 
 export default defineEventHandler(async (event) => {
-    let {passed} = await $fetch("/api/limiter")
+    let limitKey = process.env.LMTKEY
+    let {passed} = await $fetch(`/api/limiter?key=${limitKey}`)
 
     if (!passed) 
         return {
-            prompt: "Limit reached",
-            options: {thread: false, hashtags: false, emojis: false},
+            prompt: "Limit",
+            options: defaultOptions,
             response: "The rate limit for the day has been reached!",
         }
 
     let openaiKey = process.env.OPENAIKEY
+
     let { prompt, hashtags, thread, emojis, temperature, reply, links } = getQuery(event)
 
     const finalPrompt = `Write a 
@@ -34,9 +37,17 @@ export default defineEventHandler(async (event) => {
         temperature: parseInt(temperature as string),
     });
 
-    return {
+    let result = {
         prompt: prompt,
         options: {thread, hashtags, emojis, reply, temperature, links},
         response: completion.data.choices[0].text + (temperature === '1' ? ' 🔥 ' : ''),
+    }
+
+    console.log(`Data: ${JSON.stringify(result)}`)
+
+    return {
+        prompt: result.prompt,
+        options: result.options,
+        response: result.response,
     }
 })

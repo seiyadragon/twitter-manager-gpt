@@ -8,6 +8,14 @@
     </div>
 </template>
 
+<script lang="ts">
+    export default {
+        props: {
+            buttonFocusColor: String,
+        }
+    }
+</script>
+
 <style lang="scss">
     .button-container {
         padding-top: 24px;
@@ -28,7 +36,7 @@
             border-radius: 6px;
 
             &:hover, &:focus {
-                background-color: #0af;
+                background-color: v-bind("buttonFocusColor !== undefined ? buttonFocusColor : '#0af'");
                 box-shadow: 6px 6px black;
                 transform: translate(-3px, -3px);
                 color: black;

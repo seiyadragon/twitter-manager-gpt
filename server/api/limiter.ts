@@ -1,6 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
+    let passed = false
+
+    let limitKey = process.env.LMTKEY
+    let {key} = getQuery(event)
+
+    if (limitKey !== key)
+      return {
+        passed: passed
+      }
+
     const supabase = createClient(process.env.SBURL !== undefined ? process.env.SBURL : "", 
                                   process.env.SBKEY !== undefined ? process.env.SBKEY : "")
 
@@ -8,8 +18,6 @@ export default defineEventHandler(async (event) => {
     .from('ArtelligenceRateLimit')
     .select('*')
     .eq('id', 1)
-
-    let passed = false
 
     if (arl !== null) {
         if (arl[0].data.requests > 0) {
@@ -22,12 +30,12 @@ export default defineEventHandler(async (event) => {
           arl[0].data.lastReqTime = new Date().getTime()
         }
 
-        console.log(new Date().getTime() - arl[0].data.lastReqTime)
-
         await supabase
         .from('ArtelligenceRateLimit')
         .update({data: {requests: arl[0].data.requests, lastReqTime: arl[0].data.lastReqTime}})
         .eq('id', 1)
+
+        console.log(`Elapsed since last reset: ${(((new Date().getTime() - arl[0].data.lastReqTime) / 1000) / 60) / 60} hours. Requests left: ${arl[0].data.requests} requests!`)
     }
 
     return {

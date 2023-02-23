@@ -50,13 +50,23 @@
 </template>
 
 <style lang="scss">
+    @keyframes slidedown {
+        from {
+            transform: translate(0, 0);
+        }
+
+        to {
+            transform: translate(0, 35vh);
+        }
+    }
+
     .footer {
         margin-top: 28px;
         
         .footer-padding {
             padding-top: 1px;
             padding-bottom: 1px;
-            animation: 1000ms ease-in-out slidein;
+            animation: slidedown 500ms ease-in-out;
             
             .footer-content {
                 display: flex;
