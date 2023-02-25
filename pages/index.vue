@@ -37,8 +37,15 @@
             />
         </div>
         <div :class="plugExpanded ? 'filler-expanded' : 'filler'">
-            <div class="plug-wrapper">
-                <iframe class="shameless-plug" src="https://arlenmolina.codes" :scrolling="plugExpanded ? 'yes' : 'no'" @onload="plugLoaded = true"/>
+            <div :class="plugLoaded ? 'plug-wrapper-loaded' : 'plug-wrapper'">
+                <iframe 
+                    v-show="plugLoaded" 
+                    ref="iframe" 
+                    class="shameless-plug" 
+                    src="https://arlenmolina.codes" 
+                    :scrolling="plugExpanded ? 'yes' : 'no'" 
+                    @load="plugLoaded = true"
+                />
             </div>
             <Button @click="expandPlug" v-if="responses.length < 2">Learn more!</Button>
         </div>
@@ -189,12 +196,33 @@
                 let tweets = localStorage.getItem('tweets')
                 let tweetsParsed = JSON.parse(tweets !== null ? tweets : "[]")
 
-                if (tweetsParsed.length > 0)
+                if (tweetsParsed.length > 0) {
                     this.responses = tweetsParsed
+                }
+
+                (this.$refs.iframe as HTMLIFrameElement).onload = () => {
+                    this.plugLoaded = true
+                }
+
+                setTimeout(() => {
+                    if (this.plugLoaded != true)
+                        this.plugLoaded = true
+                }, 3000)
             }
         },
     }
 </script>
+
+<style lang="scss">
+    @keyframes fadein {
+        from {
+            opacity: 0%;
+        }
+        to {
+            opacity: 100%;
+        }
+    }
+</style>
 
 <style lang="scss">
     .error {
@@ -229,9 +257,10 @@
             transition: height 500ms ease-in-out;
         }
 
-        .plug-wrapper {
+        .plug-wrapper, .plug-wrapper-loaded {
             height: calc(v-bind('((6 - responses.length) * 120).toString() + "px"') - 70px);
             transition: height 500ms ease-in-out;
+            background-image: none;
         }
     }
 
@@ -246,12 +275,13 @@
         width: 100%;
         height: calc(v-bind('((2 - responses.length) * 120).toString() + "px"') - 70px);
         border: none;
-        animation: scalein 500ms ease-in-out;
         transition: height 500ms ease-in-out;
+        animation: fadein 500ms ease-in-out;
     }
 
-    .plug-wrapper {
-        background-image: v-bind('plugLoaded ? "" : "url(/fidget-spinner.gif)"');
+    .plug-wrapper, .plug-wrapper-loaded {
+        background-image: url("/fidget-spinner.gif");
+        width: 100%;
         height: calc(v-bind('((2 - responses.length) * 120).toString() + "px"') - 70px);
         transition: height 500ms ease-in-out;
         animation: scalein 500ms ease-in-out;
