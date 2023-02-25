@@ -8,6 +8,8 @@
     .paddingX {
         padding-left: clamp(8px, 5%, 384px);
         padding-right: clamp(8px, 5%, 384px);
+        padding-top: 0px;
+        padding-bottom: 0px;
 
         @media (min-width: 720px) {
             padding-left: clamp(8px, 10%, 384px);

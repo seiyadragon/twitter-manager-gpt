@@ -37,7 +37,9 @@
             />
         </div>
         <div :class="plugExpanded ? 'filler-expanded' : 'filler'">
-            <iframe class="shameless-plug" src="https://arlenmolina.codes" :scrolling="plugExpanded ? 'yes' : 'no'" />
+            <div class="plug-wrapper">
+                <iframe class="shameless-plug" src="https://arlenmolina.codes" :scrolling="plugExpanded ? 'yes' : 'no'" @onload="plugLoaded = true"/>
+            </div>
             <Button @click="expandPlug" v-if="responses.length < 2">Learn more!</Button>
         </div>
     </section>
@@ -179,6 +181,7 @@
                 },
                 notificationList: [] as Array<{color: string, content: string}>,
                 plugExpanded: false,
+                plugLoaded: false,
             }
         },
         mounted() {
@@ -206,8 +209,8 @@
     }
 
     .filler, .filler-expanded {
-        transition: height 500ms ease-in-out, padding 500ms ease-in-out;
-        height: v-bind('((2 - responses.length) * 120).toString() + "px"');
+        transition: height 500ms ease-in-out, padding 500ms ease-in-out, display 500ms ease-in-out;
+        height: v-bind('((2 - (responses.length < 2 ? responses.length : 2)) * 120).toString() + "px"');
         border-left: dashed 1px gray;
         border-right: dashed 1px gray;
         margin-top: 24px;
@@ -215,12 +218,18 @@
         padding-right: 8px;
         padding-top: v-bind('responses.length < 2 ? "8px" : "0px"');
         padding-bottom: v-bind('responses.length < 2 ? "8px" : "0px"');
+        display: v-bind('responses.length < 2 ? "block" : "none"');
     }
 
     .filler-expanded {
         height: v-bind('((6 - responses.length) * 120).toString() + "px"');
 
         .shameless-plug {
+            height: calc(v-bind('((6 - responses.length) * 120).toString() + "px"') - 70px);
+            transition: height 500ms ease-in-out;
+        }
+
+        .plug-wrapper {
             height: calc(v-bind('((6 - responses.length) * 120).toString() + "px"') - 70px);
             transition: height 500ms ease-in-out;
         }
@@ -239,5 +248,12 @@
         border: none;
         animation: scalein 500ms ease-in-out;
         transition: height 500ms ease-in-out;
+    }
+
+    .plug-wrapper {
+        background-image: v-bind('plugLoaded ? "" : "url(/fidget-spinner.gif)"');
+        height: calc(v-bind('((2 - responses.length) * 120).toString() + "px"') - 70px);
+        transition: height 500ms ease-in-out;
+        animation: scalein 500ms ease-in-out;
     }
 </style>
