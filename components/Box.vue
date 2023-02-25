@@ -38,7 +38,9 @@
             transform: scale(0.01, 0.01);
         }
     }
+</style>
 
+<style lang="scss" scoped>
     .prompt-section, .prompt-section-closing {
         border: solid 1px gray;
         margin-top: 24px;
@@ -55,7 +57,7 @@
             border-top-right-radius: 4px;
             border-top-left-radius: 4px;
 
-            h1 {
+            &:deep(h1) {
                 font-size: 24px;
                 margin-top: 0;
                 padding-top: 8px;
@@ -68,11 +70,11 @@
             padding-left: 8px;
             padding-right: 8px;
 
-            p {
+            &:deep(p) {
                 margin-top: 0;
             }
 
-            .prompt {
+            &:deep(.prompt) {
                 width: 100%;
                 border-bottom: solid black 1px;
                 margin-top: 12px;

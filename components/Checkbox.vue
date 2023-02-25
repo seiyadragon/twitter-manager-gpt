@@ -34,11 +34,11 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .checkbox-container {
         display: flex;
         
-        p {
+        &:deep(p) {
             margin-left: 8px;
             padding-top: 4px;
             padding-bottom: 4px;

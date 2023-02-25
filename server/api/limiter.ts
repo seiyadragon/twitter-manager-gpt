@@ -4,9 +4,9 @@ export default defineEventHandler(async (event) => {
     let passed = false
 
     let limitKey = process.env.LMTKEY
-    let {key} = getQuery(event)
+    let {key, get} = getQuery(event)
 
-    if (limitKey !== key)
+    if (limitKey !== key && get !== "true")
       return {
         passed: passed
       }
@@ -20,6 +20,15 @@ export default defineEventHandler(async (event) => {
     .eq('id', 1)
 
     if (arl !== null) {
+        if (get === "true") {
+          console.log(arl[0].data.lastReqTime)
+
+          return {
+            requests: arl[0].data.requests,
+            lastReqTime: arl[0].data.lastReqTime,
+          }
+        }
+
         if (arl[0].data.requests > 0) {
           arl[0].data.requests--
           passed = true

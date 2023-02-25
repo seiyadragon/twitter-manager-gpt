@@ -2,33 +2,35 @@
     <Box :title="res.prompt" :closing="closing">
         <p ref="tweetBody" :contenteditable="isEditable" class="tweet-text" :class="isEditable ? 'edit' : ''">{{ res.response }}</p>
         <div class="tweet-buttons">
-            <a :href="`https://twitter.com/intent/tweet?text=${res.response}`" data-size="large" class="tweet-button">
-                <Button class="button" @click="tweetTweet">
-                    <Icon name="ion:logo-twitter" />
-                </Button>
-            </a>
             <div class="tweet-button">
-                <Button class="button" @click="onCopyClick">
+                <Button class="button" @buttonClick="tweetTweet">
+                    <a ref="tweetLinkAnchor" :href="`https://twitter.com/intent/tweet?text=${res.response}`" data-size="large">
+                        <Icon name="ion:logo-twitter" />
+                    </a>
+                </Button>
+            </div>
+            <div class="tweet-button">
+                <Button class="button" @buttonClick="onCopyClick">
                     <Icon name="ion:copy" />
                 </Button>
             </div>
             <div class="tweet-button">
-                <Button class="button" @click="saveTweet">
+                <Button class="button" @buttonClick="saveTweet">
                     <Icon name="ion:save" />
                 </Button>
             </div>
             <div class="tweet-button">
-                <Button class="button" @click="editTweet">
+                <Button class="button" @buttonClick="editTweet">
                     <Icon name="ion:edit" />
                 </Button>
             </div>
             <div class="tweet-button">
-                <Button class="button" @click="regenerateTweet">
+                <Button class="button" @buttonClick="regenerateTweet">
                     <Icon name="ion:sync" />
                 </Button>
             </div>
             <div class="tweet-button">
-                <Button class="button" @click="onClose">
+                <Button class="button" @buttonClick="onClose">
                     <Icon name="ion:close" />
                 </Button>
             </div>
@@ -137,6 +139,7 @@
                     this.$emit('notification', getPositiveNotification('Tweed edited!'))
             },
             tweetTweet() {
+                (this.$refs.tweetLinkAnchor as HTMLAnchorElement).click()
                 this.$emit('notification', getPositiveNotification('Tweet tweeted!'))
             },
         },
@@ -149,7 +152,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .tweet-buttons {
         display: flex;
         justify-content: space-between;

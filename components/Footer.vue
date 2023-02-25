@@ -49,7 +49,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
     @keyframes slidedown {
         from {
             transform: translate(0, 0);

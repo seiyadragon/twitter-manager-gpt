@@ -38,7 +38,7 @@
         </div>
         <div :class="plugExpanded ? 'filler-expanded' : 'filler'">
             <iframe class="shameless-plug" src="https://arlenmolina.codes" :scrolling="plugExpanded ? 'yes' : 'no'" />
-            <Button @click="expandPlug">Learn more!</Button>
+            <Button @click="expandPlug" v-if="responses.length < 2">Learn more!</Button>
         </div>
     </section>
 </template>
@@ -110,7 +110,6 @@
                         this.updateLocalStorage()
                     }
                 })
-
             },
             regenerateTweet(data: any) {
                 this.responses.map((response, index) => {
@@ -121,7 +120,6 @@
                         console.log(JSON.stringify(data))
                     }
                 })
-
             },
             tweetRegenStart(prompt: string) {
                 this.responses.map((response, index) => {
@@ -208,13 +206,15 @@
     }
 
     .filler, .filler-expanded {
-        transition: height 500ms ease-in-out;
+        transition: height 500ms ease-in-out, padding 500ms ease-in-out;
         height: v-bind('((2 - responses.length) * 120).toString() + "px"');
         border-left: dashed 1px gray;
         border-right: dashed 1px gray;
         margin-top: 24px;
         padding-left: 8px;
         padding-right: 8px;
+        padding-top: v-bind('responses.length < 2 ? "8px" : "0px"');
+        padding-bottom: v-bind('responses.length < 2 ? "8px" : "0px"');
     }
 
     .filler-expanded {
@@ -234,9 +234,10 @@
     }
 
     .shameless-plug {
-        width: calc(100% - 16px);
+        width: 100%;
         height: calc(v-bind('((2 - responses.length) * 120).toString() + "px"') - 70px);
         border: none;
+        animation: scalein 500ms ease-in-out;
         transition: height 500ms ease-in-out;
     }
 </style>

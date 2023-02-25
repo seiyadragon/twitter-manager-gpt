@@ -10,7 +10,7 @@ export type Options = {
 }
 
 export async function openAIFetch(prompt: string, options: Options) {
-    return await useFetch(`/api/openai?prompt=${prompt}&hashtags=${options.hashtags}&thread=${options.thread}&emojis=${options.emojis}&reply=${options.reply}&temperature=${options.temperature}&links=${options.links}`)
+    return await useFetch(`/api/openai?prompt=${escape(prompt)}&hashtags=${options.hashtags}&thread=${options.thread}&emojis=${options.emojis}&reply=${options.reply}&temperature=${options.temperature}&links=${options.links}`)
 }
 
 export function getPositiveNotification(content: string) {

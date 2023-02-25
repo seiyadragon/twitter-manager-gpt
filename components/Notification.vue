@@ -50,7 +50,7 @@
 </script>
 
 <style lang="scss">
-    @keyframes slideleft {
+    @keyframes slideup {
         from {
             transform: translate(0, calc(-256px - v-bind("`${listPosition !== undefined ? 100 + listPosition * (100) : '100'}px`")));
         }
@@ -60,7 +60,7 @@
         }
     }
 
-    @keyframes slideright {
+    @keyframes slidedown {
         from {
             transform:  translate(0, 0);
         }
@@ -69,7 +69,9 @@
             transform: translate(0, calc(-256px - v-bind("`${listPosition !== undefined ? 100 + listPosition * (100) : '100'}px`")));
         }
     }
+</style>
 
+<style lang="scss" scoped>
     .notification, .notification-closing {
         position: sticky;
         width: 256px;
@@ -98,7 +100,7 @@
                 padding-top: 10px;
                 padding-bottom: 8px;
 
-                button {
+                &:deep(button) {
                     width: 48px;
                     height: 48px
                 }
@@ -107,10 +109,10 @@
     }
 
     .notification {
-        animation: slideleft 250ms ease-in-out;
+        animation: slidedown 250ms ease-in-out;
     }
 
     .notification-closing {
-        animation: slideright 250ms ease-in-out;
+        animation: slideup 250ms ease-in-out;
     }
 </style>
