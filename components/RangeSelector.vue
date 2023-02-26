@@ -1,7 +1,7 @@
 <template>
     <div class="range-selector">
         <input type="range" class="length-selector" :min="min" :max="max" :step="step" v-model="value" @input="onInput">
-        <p>Length: {{ 140 * (value + 1) }} - {{ 280 * (value + 1) }} characters</p>
+        <p>Length: {{ 140 * (value) }} - {{ 280 * (value) }} characters or ~{{ value }} {{ value == 1 ? 'tweet' : 'tweets' }}</p>
     </div>
 </template>
 
@@ -23,7 +23,7 @@
         },
         methods: {
             onInput() {
-                this.$emit('valueChanged', {start: 140 * (this.value + 1), end: 280 * (this.value + 1)})
+                this.$emit('valueChanged', JSON.stringify({start:140 * this.value, end:280 * this.value}))
             },
         },
     }
@@ -45,8 +45,8 @@
         background: transparent;
         cursor: pointer;
         width: 100%;
-        padding-top: 8px;
-        padding-bottom: 8px;
+        padding-top: 16px;
+        padding-bottom: 16px;
 
         &::-webkit-slider-runnable-track {
             background-color: black;
@@ -56,10 +56,11 @@
         &::-webkit-slider-thumb {
             -webkit-appearance: none;
             background-color: black;
-            width: 16px;
-            height: 16px;
+            width: 32px;
+            height: 32px;
             border-radius: 100%;
-            margin-top: -8px;
+            margin-top: -16px;
+            border: solid 1px black;
             transition: background-color 250ms ease-in-out, 
                         transform 250ms ease-in-out, 
                         box-shadow 250ms ease-in-out,
@@ -81,9 +82,10 @@
         &::-moz-range-thumb {
             border: none;
             background-color: black;
-            width: 16px;
-            height: 16px;
+            width: 32px;
+            height: 32px;
             border-radius: 100%;
+            border: solid 1px black;
             transition: background-color 250ms ease-in-out, 
                         transform 250ms ease-in-out, 
                         box-shadow 250ms ease-in-out,

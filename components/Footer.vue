@@ -60,18 +60,23 @@
         }
     }
 
-    .footer {
-        margin-top: 28px;
-        
+    .footer {        
         .footer-padding {
             padding-top: 1px;
             padding-bottom: 1px;
             animation: slidedown 500ms ease-in-out;
+
             
             .footer-content {
                 display: flex;
                 justify-content: space-between;
                 border-top: 1px solid black;
+                border-left: 1px solid black;
+                border-right: 1px solid black;
+                padding-left: 8px;
+                padding-right: 8px;
+                border-top-right-radius: 6px;
+                border-top-left-radius: 6px;
             }
 
             h1, .links {
@@ -101,12 +106,14 @@
                         left: 0;
                         background-color: black;
                         transform-origin: bottom right;
-                        transition: transform 250ms ease-in-out;
+                        transition: transform 500ms ease-in-out;
+                        animation: fadeout 500ms ease-in-out;
                     }
 
                     &:hover::after {
                         transform: scale(1);
                         transform-origin: bottom left;
+                        animation: fadein 500ms ease-in-out;
                     }
                 }
             }

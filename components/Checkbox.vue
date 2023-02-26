@@ -1,6 +1,7 @@
 <template>
     <div class="checkbox-container">
         <div :class="checkboxClass" @click="onClick">
+            <Icon name="ion:checkmark-sharp" class="checkmark" />
             <input ref="inputRef" type="checkbox" class="invis" v-model="checkboxChecked">
         </div>
         <p>{{ label }}</p>
@@ -54,6 +55,11 @@
                     box-shadow 250ms ease-in-out,
                     color 250ms ease-in-out;
         border-radius: 6px;
+
+        .checkmark {
+            color: white;
+            font-size: 24px;
+        }
     }
 
     .checkbox-checked {

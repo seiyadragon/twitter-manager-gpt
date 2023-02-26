@@ -21,21 +21,23 @@
                     <Checkbox label="hot" @onTicked="(ticked) => ticked ? tweetOptions.temperature = '1' : tweetOptions.temperature = '0'"/>
                 </div>
             </div>
-            <RangeSelector :min="0" :max="20" :initial="0" @valueChanged="(length) => tweetOptions.length = JSON.stringify(length)"/>
+            <RangeSelector :min="1" :max="20" :initial="1" @valueChanged="(length: string) => tweetOptions.length = length"/>
             <p>Type your tweet prompt here:</p>
             <div ref="textRef" :contenteditable="true" class="prompt" :value="promptText" @input="onPromptInput"/>
             <Button @click="onSubmitClick" :button-focus-color="buttonClickColor">
                 Get your tweet!
             </Button>
         </Box>
-        <div v-for="res in responses">
-            <Tweet :res="res" 
-                @tweetDeleted="deleteTweet" 
-                @tweetRegenerated="regenerateTweet" 
-                @tweetEdited="editTweet" 
-                @tweetRegenStart="tweetRegenStart"
-                @notification="tweetNotification"
-            />
+        <div class="tweets">
+            <div v-for="res in responses">
+                <Tweet :res="res" 
+                    @tweetDeleted="deleteTweet" 
+                    @tweetRegenerated="regenerateTweet" 
+                    @tweetEdited="editTweet" 
+                    @tweetRegenStart="tweetRegenStart"
+                    @notification="tweetNotification"
+                />
+            </div>
         </div>
         <div :class="plugExpanded ? 'filler-expanded' : 'filler'">
             <div :class="plugLoaded ? 'plug-wrapper-loaded' : 'plug-wrapper'">
@@ -215,6 +217,15 @@
             opacity: 100%;
         }
     }
+
+    @keyframes fadeout {
+        from {
+            opacity: 100%;
+        }
+        to {
+            opacity: 0%;
+        }
+    }
 </style>
 
 <style lang="scss">
@@ -234,7 +245,8 @@
         height: v-bind('((2 - (responses.length < 2 ? responses.length : 2)) * 120).toString() + "px"');
         border-left: dashed 1px gray;
         border-right: dashed 1px gray;
-        margin-top: 24px;
+        margin-top: 4px;
+        margin-bottom: 4px;
         padding-left: 8px;
         padding-right: 8px;
         padding-top: v-bind('responses.length < 2 ? "8px" : "0px"');
@@ -278,5 +290,10 @@
         height: calc(v-bind('((2 - responses.length) * 120).toString() + "px"') - 70px);
         transition: height 500ms ease-in-out;
         animation: scalein 500ms ease-in-out;
+    }
+
+    .tweets {
+        padding-bottom: v-bind('responses.length < 2 ? "0px" : "24px"');
+        transition: padding 500ms ease-in-out;
     }
 </style>

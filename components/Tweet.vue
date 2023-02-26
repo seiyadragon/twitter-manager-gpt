@@ -147,6 +147,7 @@
             return {
                 isEditable: false,
                 closing: false,
+                height: 0,
             }
         },
     }

@@ -1,4 +1,4 @@
-export const defaultOptions: Options = {thread: "false", hashtags: "false", emojis: "false", temperature: "0", reply: "false", links: "false", length: "{start: 140, end: 280}"}
+export const defaultOptions: Options = {thread: "false", hashtags: "false", emojis: "false", temperature: "0", reply: "false", links: "false", length: '{"start": 140, "end": 280}'}
 
 export type Options = {
     thread: string, 
