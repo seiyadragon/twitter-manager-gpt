@@ -21,6 +21,7 @@
                     <Checkbox label="hot" @onTicked="(ticked) => ticked ? tweetOptions.temperature = '1' : tweetOptions.temperature = '0'"/>
                 </div>
             </div>
+            <RangeSelector :min="0" :max="20" :initial="0" @valueChanged="(length) => tweetOptions.length = JSON.stringify(length)"/>
             <p>Type your tweet prompt here:</p>
             <div ref="textRef" :contenteditable="true" class="prompt" :value="promptText" @input="onPromptInput"/>
             <Button @click="onSubmitClick" :button-focus-color="buttonClickColor">
@@ -170,7 +171,6 @@
             },
             expandPlug() {
                 this.plugExpanded = !this.plugExpanded
-                console.log("Test")
             },
         },
         data() {
@@ -178,14 +178,7 @@
                 promptText: "",
                 responses: [] as Array<{prompt: string, options: Options, response: string}>,
                 buttonClickColor: "#0af",
-                tweetOptions: {
-                    hashtags: 'false',
-                    thread: 'false',
-                    emojis: 'false',
-                    temperature: '0',
-                    reply: 'false',
-                    links: 'false',
-                },
+                tweetOptions: defaultOptions,
                 notificationList: [] as Array<{color: string, content: string}>,
                 plugExpanded: false,
                 plugLoaded: false,
