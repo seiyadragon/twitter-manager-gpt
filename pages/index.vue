@@ -11,14 +11,17 @@
                 <div>
                     <Checkbox label="hashtags" @onTicked="(ticked) => tweetOptions.hashtags = ticked.toString()"/>
                     <Checkbox label="emojis" @onTicked="(ticked) => tweetOptions.emojis = ticked.toString()"/>
+                    <Checkbox label="hook" @onTicked="(ticked) => tweetOptions.hook = ticked.toString()"/>
                 </div>
                 <div>
                     <Checkbox label="thread" @onTicked="(ticked) => tweetOptions.thread = ticked.toString()"/>
                     <Checkbox label="reply" @onTicked="(ticked) => tweetOptions.reply = ticked.toString()"/>
+                    <Checkbox label="question" @onTicked="(ticked) => tweetOptions.question = ticked.toString()"/>
                 </div>
                 <div>
                     <Checkbox label="links" @onTicked="(ticked) => tweetOptions.links = ticked.toString()" />
                     <Checkbox label="hot" @onTicked="(ticked) => ticked ? tweetOptions.temperature = '1' : tweetOptions.temperature = '0'"/>
+                    <Checkbox label="call to action" @onTicked="(ticked) => tweetOptions.cta = ticked.toString()"/>
                 </div>
             </div>
             <RangeSelector :min="1" :max="20" :initial="1" @valueChanged="(length: string) => tweetOptions.length = length"/>

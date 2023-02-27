@@ -80,7 +80,6 @@
         }
 
         &::-moz-range-thumb {
-            border: none;
             background-color: black;
             width: 32px;
             height: 32px;

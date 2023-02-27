@@ -1,38 +1,41 @@
 <template>
     <Box :title="res.prompt" :closing="closing">
-        <p ref="tweetBody" :contenteditable="isEditable" class="tweet-text" :class="isEditable ? 'edit' : ''">{{ res.response }}</p>
-        <div class="tweet-buttons">
-            <div class="tweet-button">
-                <Button class="button" @buttonClick="tweetTweet">
-                    <a ref="tweetLinkAnchor" :href="`https://twitter.com/intent/tweet?text=${res.response}`" data-size="large">
-                        <Icon name="ion:logo-twitter" />
-                    </a>
-                </Button>
-            </div>
-            <div class="tweet-button">
-                <Button class="button" @buttonClick="onCopyClick">
-                    <Icon name="ion:copy" />
-                </Button>
-            </div>
-            <div class="tweet-button">
-                <Button class="button" @buttonClick="saveTweet">
-                    <Icon name="ion:save" />
-                </Button>
-            </div>
-            <div class="tweet-button">
-                <Button class="button" @buttonClick="editTweet">
-                    <Icon name="ion:edit" />
-                </Button>
-            </div>
-            <div class="tweet-button">
-                <Button class="button" @buttonClick="regenerateTweet">
-                    <Icon name="ion:sync" />
-                </Button>
-            </div>
-            <div class="tweet-button">
-                <Button class="button" @buttonClick="onClose">
-                    <Icon name="ion:close" />
-                </Button>
+        <div class="tweet-body">
+            <p ref="tweetBody" :contenteditable="isEditable" class="tweet-text" :class="isEditable ? 'edit' : ''">{{ res.response }}</p>
+            <img src="/fidget-spinner.gif" alt="Loading fidget spinner" v-if="res.response === 'Loading...'">
+            <div class="tweet-buttons">
+                <div class="tweet-button">
+                    <Button class="button" @buttonClick="tweetTweet">
+                        <a ref="tweetLinkAnchor" :href="`https://twitter.com/intent/tweet?text=${res.response}`" data-size="large">
+                            <Icon name="ion:logo-twitter" />
+                        </a>
+                    </Button>
+                </div>
+                <div class="tweet-button">
+                    <Button class="button" @buttonClick="onCopyClick">
+                        <Icon name="ion:copy" />
+                    </Button>
+                </div>
+                <div class="tweet-button">
+                    <Button class="button" @buttonClick="saveTweet">
+                        <Icon name="ion:save" />
+                    </Button>
+                </div>
+                <div class="tweet-button">
+                    <Button class="button" @buttonClick="editTweet">
+                        <Icon name="ion:edit" />
+                    </Button>
+                </div>
+                <div class="tweet-button">
+                    <Button class="button" @buttonClick="regenerateTweet">
+                        <Icon name="ion:sync" />
+                    </Button>
+                </div>
+                <div class="tweet-button">
+                    <Button class="button" @buttonClick="onClose">
+                        <Icon name="ion:close" />
+                    </Button>
+                </div>
             </div>
         </div>
     </Box>
@@ -56,6 +59,8 @@
                 this.$emit('tweetRegenStart', this.res.prompt)
                 this.$emit('notification', getPositiveNotification('Tweet regeneration started!'))
 
+                this.height = this.res.options.length.end * 24;
+
                 let { data } = await openAIFetch(this.res.prompt, this.res.options)
                 let response = (data.value?.response)?.toString()
                 let builtData = {
@@ -72,14 +77,7 @@
                 while (lastResponse === builtData.response) {
                     console.log(builtData.response.toString())
 
-                    let { data } = await openAIFetch(this.res.prompt, counter < 3 ? this.res.options : {
-                        thread: this.res.options.thread, 
-                        hashtags: this.res.options.hashtags, 
-                        emojis: this.res.options.emojis, 
-                        temperature: '1', 
-                        reply: this.res.options.reply, 
-                        links: this.res.options.links
-                    })
+                    let { data } = await openAIFetch(this.res.prompt, counter < 3 ? this.res.options : defaultOptions.temperature = '1')
 
                     let response = (data.value?.response)?.toString()
 
@@ -150,6 +148,10 @@
                 height: 0,
             }
         },
+        mounted() {
+            this.height = this.res.options.length.end * 24 + (32 * 8);
+            console.log(this.height)
+        }
     }
 </script>
 
@@ -179,6 +181,7 @@
 
     .tweet-text {
         margin-bottom: 0px;
+        white-space: pre-wrap;
     }
 
     .edit {
