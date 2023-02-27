@@ -36,16 +36,16 @@ export default defineEventHandler(async (event) => {
     console.log(getQuery(event))
 
     let finalPrompt = `Write a 
-                        ${thread === 'true' ? 'twitter thread' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
-                        ${reply === 'true' ? 'reply to the following' : ''} 
-                        ${prompt}. Make sure you follow all the following rules. 
-                        ${hashtags === 'true' ? '' : 'DO NOT'} use hashtags, 
-                        ${emojis === 'true' ? '' : 'DO NOT'} use emojis. 
-                        ${links === 'true' ? '' : 'DO NOT'} use links. Make sure the length is between 
-                        ${parsedLength.start} and 
-                        ${parsedLength.end} charcters if it's a thread. 
-                        ${hook === 'true' ? 'Make sure you start with a hooking line, tweet, or sentence.' : ''} 
-                        ${cta ==='true' ? 'Add a call to action at the end!' : ''}
+        ${thread === 'true' ? 'twitter thread' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
+        ${reply === 'true' ? 'reply to the following' : ''} 
+        ${prompt}. Make sure you follow all the following rules. 
+        ${hashtags === 'true' ? '' : 'DO NOT'} use hashtags, 
+        ${emojis === 'true' ? '' : 'DO NOT'} use emojis. 
+        ${links === 'true' ? '' : 'DO NOT'} use links. Make sure the length is between 
+        ${parsedLength.start} and 
+        ${parsedLength.end} charcters if it's a thread. 
+        ${hook === 'true' ? 'Make sure you start with a hooking line, tweet, or sentence.' : ''} 
+        ${cta ==='true' ? 'Add a call to action at the end!' : ''}
     `.replaceAll('\n', '')
     finalPrompt = finalPrompt.replaceAll(/\s\s+/g, ' ')
     
@@ -93,7 +93,6 @@ export default defineEventHandler(async (event) => {
             options: props,
             response: 'Could not genereate a response 😔'
         }
-
 
     let result = {
         prompt: prompt,

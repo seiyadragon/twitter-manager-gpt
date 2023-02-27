@@ -25,7 +25,23 @@ export const defaultOptions: Options = {
 }
 
 export async function openAIFetch(prompt: string, options: Options) {
-    return await useFetch(`/api/openai?prompt=${escape(prompt)}&hashtags=${options.hashtags}&thread=${options.thread}&emojis=${options.emojis}&reply=${options.reply}&temperature=${options.temperature}&links=${options.links}&length=${options.length}&hook=${options.hook}&question=${options.question}&cta=${options.cta}`)
+    let request = `/api/openai
+        ?prompt=${escape(prompt)}
+            &hashtags=${options.hashtags}
+            &thread=${options.thread}
+            &emojis=${options.emojis}
+            &reply=${options.reply}
+            &temperature=${options.temperature}
+            &links=${options.links}
+            &length=${options.length}
+            &hook=${options.hook}
+            &question=${options.question}
+            &cta=${options.cta}
+    `.replaceAll('\n', '').replaceAll(/\s\s+/g, '')
+
+    console.log(request)
+
+    return await useFetch(request.toString())
 }
 
 export function getPositiveNotification(content: string) {
