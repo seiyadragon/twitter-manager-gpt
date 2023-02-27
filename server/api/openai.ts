@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
     console.log(getQuery(event))
 
     let finalPrompt = `Write a 
-                        ${thread === 'true' ? 'twitter thread about' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
+                        ${thread === 'true' ? 'twitter thread' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
                         ${reply === 'true' ? 'reply to the following' : ''} 
                         ${prompt}. Make sure you follow all the following rules. 
                         ${hashtags === 'true' ? '' : 'DO NOT'} use hashtags, 
@@ -72,7 +72,28 @@ export default defineEventHandler(async (event) => {
 
         if (completion.data.choices[0].text[1] === '\n')
             removeNewlineSetting = '\n\n'
-    }
+
+        if (hashtags !== 'true') {
+            let splitResponse = completion.data.choices[0].text.toString().split(' ')
+            let tempResponse = ''
+            console.log(splitResponse)
+
+            for (let i = 0; i < splitResponse.length; i++) {
+                if (splitResponse[i].charAt(0) !== '#') 
+                    tempResponse = tempResponse.concat((i > 0 ? ' ' : '') + splitResponse[i])
+            }
+
+            console.log(tempResponse)
+
+            completion.data.choices[0].text = tempResponse
+        }
+    } else
+        return {
+            prompt: prompt,
+            options: props,
+            response: 'Could not genereate a response 😔'
+        }
+
 
     let result = {
         prompt: prompt,

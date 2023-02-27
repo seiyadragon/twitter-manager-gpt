@@ -59,8 +59,6 @@
                 this.$emit('tweetRegenStart', this.res.prompt)
                 this.$emit('notification', getPositiveNotification('Tweet regeneration started!'))
 
-                this.height = this.res.options.length.end * 24;
-
                 let { data } = await openAIFetch(this.res.prompt, this.res.options)
                 let response = (data.value?.response)?.toString()
                 let builtData = {
@@ -145,13 +143,8 @@
             return {
                 isEditable: false,
                 closing: false,
-                height: 0,
             }
         },
-        mounted() {
-            this.height = this.res.options.length.end * 24 + (32 * 8);
-            console.log(this.height)
-        }
     }
 </script>
 
