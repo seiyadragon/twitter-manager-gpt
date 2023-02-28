@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
         }
         
         if (new Date().getTime() - arl[0].data.lastReqTime >= 86400000) {
-          arl[0].data.requests = 500
+          arl[0].data.requests = 25
           arl[0].data.lastReqTime = new Date().getTime()
         }
 
