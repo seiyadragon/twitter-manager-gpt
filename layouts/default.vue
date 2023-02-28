@@ -1,11 +1,12 @@
 <template>
-    <main>
+    <main v-if="!maintnance">
         <Header />
         <PaddingX>
             <slot />
         </PaddingX>
         <Footer />
     </main>
+    <h1 class="maintnance">Sorry but the site is down for maintnance. 😔 Someone wasn't a good programmer and borked it. 😥</h1>
 </template>
 
 <script lang="ts">
@@ -14,7 +15,7 @@
         },
         data() {
             return {
-                
+                maintnance: true,
             }
         },
     }
@@ -69,6 +70,10 @@
         left: 0;
         right: 0;
         bottom: 0;
+    }
+
+    .maintnance {
+        font-size: 96px;
     }
 
 </style>
