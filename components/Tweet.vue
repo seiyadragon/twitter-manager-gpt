@@ -60,7 +60,7 @@
                 this.$emit('notification', getPositiveNotification('Tweet regeneration started!'))
 
                 let { data } = await openAIFetch(this.res.prompt, this.res.options)
-                let response = ((data.value as any).response)?.toString()
+                let response = ((data.value as any).response).toString()
                 let builtData = {
                     prompt: this.res.prompt,
                     options: this.res.options,
@@ -77,7 +77,7 @@
 
                     let { data } = await openAIFetch(this.res.prompt, counter < 3 ? this.res.options : defaultOptions.temperature = '1')
 
-                    let response = ((data.value as any).response)?.toString()
+                    let response = ((data.value as any).response).toString()
 
                     builtData = {
                         prompt: this.res.prompt,

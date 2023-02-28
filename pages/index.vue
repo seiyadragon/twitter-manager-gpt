@@ -96,9 +96,9 @@
 
                 let { data } = await openAIFetch(this.promptText, this.tweetOptions)
                 let builtData = {
-                    prompt: ((data.value as any).prompt)?.toString(),
+                    prompt: ((data.value as any).prompt).toString(),
                     options: ((data.value as any).options) as Options,
-                    response: ((data.value as any).response)?.toString(),
+                    response: ((data.value as any).response).toString(),
                 }
                 let definedData = {
                     prompt: builtData.prompt !== undefined ? builtData.prompt : "",
