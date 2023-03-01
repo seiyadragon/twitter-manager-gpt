@@ -7,10 +7,11 @@
         </Button>
     </Box>
     <Box v-if="isLoggedIn" title="Admin">
-        <p>Requests: {{ requests + " / 500" }} </p>
+        <p>Requests made: {{ requests + " / 25" }} </p>
         <p>Time left: {{ timeLeft + " hours" }} </p>
+        <Button @buttonClick="onReset">Reset Limit!</Button>
     </Box>
-    <Button>
+    <Button class="back-to-home">
         <NuxtLink href="/">Back to home!</NuxtLink>
     </Button>
 </template>
@@ -41,11 +42,23 @@
             async getData() {
                 let {data} = await useFetch(`/api/limiter?get=true`)
 
-                this.requests = 500 - data.value?.requests
+                this.requests = 25 - data.value?.requests
                 this.timeLeft = 24 - ((new Date().getTime() - data.value?.lastReqTime) / 1000 / 60 / 60)
 
                 setTimeout(async () => await this.getData(), 300000)
             },
+            async onReset() {
+                let {data} = await useFetch(`/api/limiter?reset=true`)
+
+                this.requests = 25 - data.value?.requests
+                this.timeLeft = 24 - ((new Date().getTime() - data.value?.lastReqTime) / 1000 / 60 / 60)
+            },
         },
     }
 </script>
+
+<style class="scss" scoped>
+    .back-to-home {
+        margin-bottom: 24px;
+    }
+</style>
