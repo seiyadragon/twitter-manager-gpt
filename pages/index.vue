@@ -245,7 +245,7 @@
 
     .filler, .filler-expanded {
         transition: height 500ms ease-in-out, padding 500ms ease-in-out, display 500ms ease-in-out;
-        height: v-bind('((2 - (responses.length < 2 ? responses.length : 2)) * 120).toString() + "px"');
+        height: v-bind('((2 - (responses.length < 2 ? responses.length : 2)) * 256).toString() + "px"');
         border-left: dashed 1px gray;
         border-right: dashed 1px gray;
         margin-top: 4px;
@@ -258,15 +258,15 @@
     }
 
     .filler-expanded {
-        height: v-bind('((6 - responses.length) * 120).toString() + "px"');
+        height: v-bind('((4 - responses.length) * 256).toString() + "px"');
 
         .shameless-plug {
-            height: calc(v-bind('((6 - responses.length) * 120).toString() + "px"') - 70px);
+            height: calc(v-bind('((4 - responses.length) * 256).toString() + "px"') - 70px);
             transition: height 500ms ease-in-out;
         }
 
         .plug-wrapper, .plug-wrapper-loaded {
-            height: calc(v-bind('((6 - responses.length) * 120).toString() + "px"') - 70px);
+            height: calc(v-bind('((4 - responses.length) * 256).toString() + "px"') - 70px);
             transition: height 500ms ease-in-out;
             background-image: none;
         }
@@ -281,7 +281,7 @@
 
     .shameless-plug {
         width: 100%;
-        height: calc(v-bind('((2 - responses.length) * 120).toString() + "px"') - 70px);
+        height: calc(v-bind('((2 - responses.length) * 256).toString() + "px"') - 70px);
         border: none;
         transition: height 500ms ease-in-out;
         animation: fadein 500ms ease-in-out;
@@ -290,7 +290,7 @@
     .plug-wrapper, .plug-wrapper-loaded {
         background-image: url("/fidget-spinner.gif");
         width: 100%;
-        height: calc(v-bind('((2 - responses.length) * 120).toString() + "px"') - 70px);
+        height: calc(v-bind('((2 - responses.length) * 256).toString() + "px"') - 70px);
         transition: height 500ms ease-in-out;
         animation: scalein 500ms ease-in-out;
     }
