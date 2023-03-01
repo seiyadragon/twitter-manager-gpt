@@ -48,6 +48,7 @@
         margin: 0;
         font-family: 'Ubuntu';
         overflow-x: hidden;
+        background-color: white;
     }
 
     ::-webkit-scrollbar {
