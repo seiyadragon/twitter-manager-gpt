@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
     console.log(getQuery(event))
 
     let finalPrompt = `Write a 
-        ${thread === 'true' ? 'twitter thread' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
+        ${thread === 'true' ? 'twitter thread about' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
         ${reply === 'true' ? 'reply to the following' : ''} 
         ${prompt}. Make sure you follow all the following rules. 
         ${hashtags === 'true' ? '' : 'DO NOT'} use hashtags, 
