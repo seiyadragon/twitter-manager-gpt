@@ -6,7 +6,9 @@
         </PaddingX>
         <Footer />
     </main>
-    <h1 class="maintnance">Sorry but the site is down for maintnance. 😔 Someone wasn't a good programmer and borked it. 😥</h1>
+    <PaddingX v-if="maintnance">
+        <h1 class="maintnance">Sorry but the site is down for maintnance. 😔 Someone wasn't a good programmer and borked it. 😥</h1>
+    </PaddingX>
 </template>
 
 <script lang="ts">
@@ -15,7 +17,7 @@
         },
         data() {
             return {
-                maintnance: true,
+                maintnance: false,
             }
         },
     }
