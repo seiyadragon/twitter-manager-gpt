@@ -48,6 +48,12 @@
         props: [
             'res',
         ],
+        data() {
+            return {
+                isEditable: false,
+                closing: false,
+            }
+        },
         methods: {
             onCopyClick() {
                 navigator.clipboard.writeText(this.res.response)
@@ -60,10 +66,14 @@
                 this.$emit('notification', getPositiveNotification('Tweet regeneration started!'))
 
                 let { data } = await openAIFetch(this.res.prompt, this.res.options)
+
+                let prompt = ((data.value as any).prompt).toString()
+                let options = ((data.value as any).options) as Options
                 let response = ((data.value as any).response).toString()
+
                 let builtData = {
-                    prompt: this.res.prompt,
-                    options: this.res.options,
+                    prompt: prompt,
+                    options: options,
                     response: response !== undefined ? response : "",
                 }
 
@@ -77,11 +87,13 @@
 
                     let { data } = await openAIFetch(this.res.prompt, counter < 3 ? this.res.options : defaultOptions.temperature = '1')
 
+                    let prompt = ((data.value as any).prompt).toString()
+                    let options = ((data.value as any).options)
                     let response = ((data.value as any).response).toString()
 
                     builtData = {
-                        prompt: this.res.prompt,
-                        options: this.res.options,
+                        prompt: prompt,
+                        options: options,
                         response: response !== undefined ? response : "",
                     }
 
@@ -138,12 +150,6 @@
                 (this.$refs.tweetLinkAnchor as HTMLAnchorElement).click()
                 this.$emit('notification', getPositiveNotification('Tweet tweeted!'))
             },
-        },
-        data() {
-            return {
-                isEditable: false,
-                closing: false,
-            }
         },
     }
 </script>

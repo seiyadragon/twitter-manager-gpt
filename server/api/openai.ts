@@ -46,12 +46,43 @@ export default defineEventHandler(async (event) => {
         ${parsedLength.end} charcters if it's a thread. 
         ${hook === 'true' ? 'Make sure you start with a hooking line, tweet, or sentence.' : ''} 
         ${cta ==='true' ? 'Add a call to action at the end!' : ''}
-    `.replaceAll('\n', '')
-    finalPrompt = finalPrompt.replaceAll(/\s\s+/g, ' ')
-    
+    `.replaceAll('\n', '').replaceAll(/\s\s+/g, ' ')
+
     console.log(finalPrompt)
 
-    const configuration = new Configuration({
+    let systemRole = `
+        You are an exact clone of OpenAI's text-davinci-003 and you generate responses exactly like it! 
+        Your specific role is to create Twitter posts and it's very important that you follow the rules. 
+        Never use hashtags in the Tweet unless told to do so.
+    `.replaceAll('\n', '').replaceAll(/\s\s+/g, ' ')
+
+    try {
+        const optionsBody = {
+            model: "gpt-3.5-turbo",
+            max_tokens: thread === 'true' ? 1400 : 70,
+            temperature: parseInt(temperature as string),
+            messages: [
+                {"role": "system", "content": `${systemRole}`},
+                {"role": "user", "content": `${finalPrompt}`}
+            ]
+        }
+
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${openaiKey}`,
+            },
+            body: JSON.stringify(optionsBody)
+        }
+
+        var chat: any = await (await fetch("https://api.openai.com/v1/chat/completions", options as any)).json()
+
+    } catch (exception) {
+        console.log(exception)
+    }
+
+    /*const configuration = new Configuration({
         apiKey: openaiKey,
     });
 
@@ -62,19 +93,21 @@ export default defineEventHandler(async (event) => {
         prompt: finalPrompt,
         max_tokens: thread === 'true' ? 1400 : 70,
         temperature: parseInt(temperature as string),
-    });
+    });*/
+
+    let finalResponse = chat.choices[0].message.content.toString()
 
     let removeNewlineSetting = ''
 
-    if (completion.data.choices[0].text !== undefined) {
-        if (completion.data.choices[0].text[0] === '\n')
+    if (finalResponse !== undefined) {
+        if (finalResponse[0] === '\n')
             removeNewlineSetting = '\n'
 
-        if (completion.data.choices[0].text[1] === '\n')
+        if (finalResponse[1] === '\n')
             removeNewlineSetting = '\n\n'
 
         if (hashtags !== 'true') {
-            let splitResponse = completion.data.choices[0].text.toString().split(' ')
+            let splitResponse = finalResponse.toString().split(' ')
             let tempResponse = ''
             console.log(splitResponse)
 
@@ -85,7 +118,7 @@ export default defineEventHandler(async (event) => {
 
             console.log(tempResponse)
 
-            completion.data.choices[0].text = tempResponse
+            finalResponse = tempResponse
         }
     } else
         return {
@@ -97,7 +130,7 @@ export default defineEventHandler(async (event) => {
     let result = {
         prompt: prompt,
         options: props,
-        response: completion.data.choices[0].text?.replace(`${removeNewlineSetting}`, '') + (temperature === '1' ? ' 🔥 ' : ''),
+        response: finalResponse.replace(`${removeNewlineSetting}`, '') + (temperature === '1' ? ' 🔥 ' : ''),
     }
 
     console.log(`Data: ${JSON.stringify(result)}`)

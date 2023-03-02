@@ -1,7 +1,7 @@
 <template>
     <div class="notifications">
         <Notification v-for="(notification, index) in notificationList" :notification-color="notification.color" 
-        :listPosition="index" @closed="onNotificationClose" :key="index">
+        :listPosition="index" @closed="onNotificationClose" :key="index" class="notification">
             <p>{{ notification.content }}</p>
         </Notification>
     </div>
@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-    import { defaultOptions, Options, openAIFetch, getPositiveNotification, getNegativeNotification } from '~~/util/Util'
+    import { defaultOptions, Options, openAIFetch, getPositiveNotification, getNegativeNotification, TweetData } from '~~/util/Util'
 
     export default {
         methods: {
@@ -128,6 +128,13 @@
             },
             regenerateTweet(data: any) {
                 this.responses.map((response, index) => {
+                    if (data.prompt === "Limit") {
+                        this.responses.splice(this.responses.length - 1, 1)
+                        this.tweetNotification(getNegativeNotification(data.response))
+                    } else {
+                        this.responses[this.responses.length - 1] = data
+                    }
+
                     if (data.prompt === response.prompt) {
                         this.responses[index] = data
                         this.updateLocalStorage()
@@ -181,7 +188,7 @@
         data() {
             return {
                 promptText: "",
-                responses: [] as Array<{prompt: string, options: Options, response: string}>,
+                responses: [] as Array<TweetData>,
                 buttonClickColor: "#0af",
                 tweetOptions: defaultOptions,
                 notificationList: [] as Array<{color: string, content: string}>,
@@ -273,10 +280,17 @@
     }
 
     .notifications {
-        position: absolute;
+        position: fixed;
         left: calc(50% - (256px / 2));
         transition: height 250ms ease-in-out;
-        height: 100vh;
+        top: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 99;
+
+        .notification {
+            pointer-events: auto;
+        }
     }
 
     .shameless-plug {

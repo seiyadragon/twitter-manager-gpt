@@ -1,3 +1,4 @@
+
 export type Options = {
     thread: string, 
     hashtags: string, 
@@ -22,6 +23,12 @@ export const defaultOptions: Options = {
     hook: 'false',
     question: 'false',
     cta: 'false',
+}
+
+export type TweetData = {
+    prompt: string, 
+    options: Options, 
+    response: string,
 }
 
 export async function openAIFetch(prompt: string, options: Options) {
