@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
         ${links === 'true' ? '' : 'DO NOT'} use links. Make sure the length is between 
         ${parsedLength.start} and 
         ${parsedLength.end} charcters if it's a thread. 
-        ${hook === 'true' ? 'Make sure you start with a hooking line, tweet, or sentence.' : ''} 
+        ${hook === 'true' ? 'Make sure you start with a short, hooking line.' : ''} 
         ${cta ==='true' ? 'Add a call to action at the end!' : ''}
     `.replaceAll('\n', '').replaceAll(/\s\s+/g, ' ')
 
