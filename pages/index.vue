@@ -50,7 +50,7 @@
                     class="shameless-plug" 
                     src="https://arlenmolina.codes" 
                     :scrolling="plugExpanded ? 'yes' : 'no'" 
-                    @load="plugLoaded = true"
+                    @load="onPlugLoad"
                 />
             </div>
             <Button @click="expandPlug" v-if="responses.length < 2">Learn more!</Button>
@@ -183,6 +183,9 @@
             },
             expandPlug() {
                 this.plugExpanded = !this.plugExpanded
+            },
+            onPlugLoad(event: any) {
+                this.plugLoaded = true;
             },
         },
         data() {
