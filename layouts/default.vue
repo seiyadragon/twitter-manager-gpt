@@ -1,27 +1,12 @@
 <template>
-    <main v-if="!maintnance">
+    <main>
         <Header />
         <PaddingX>
             <slot />
         </PaddingX>
         <Footer />
     </main>
-    <PaddingX v-if="maintnance">
-        <h1 class="maintnance">Sorry but the site is down for maintnance. 😔 Someone wasn't a good programmer and borked it. 😥</h1>
-    </PaddingX>
 </template>
-
-<script lang="ts">
-    export default {
-        methods: {
-        },
-        data() {
-            return {
-                maintnance: false,
-            }
-        },
-    }
-</script>
 
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css?family=Zeyada');

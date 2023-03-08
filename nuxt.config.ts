@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default {
-    modules: ['nuxt-icon'],
+    modules: ['nuxt-icon', '@nuxtjs/supabase'],
     buildModules: ['@nuxt/typescript-build'],
     app: {
         head: {

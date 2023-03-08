@@ -75,9 +75,13 @@
             }
 
             &:deep(.prompt) {
+                border: none;
+
                 width: 100%;
                 border-bottom: solid black 1px;
                 margin-top: 12px;
+                font-size: 16px;
+                font-family: 'Ubuntu';
     
                 &:focus {
                     outline: none;
