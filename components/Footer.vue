@@ -5,14 +5,14 @@
                 <section class="footer-section">
                     <h1>About</h1>
                     <p>{{ `
-                        This is a project that came about from my own needs.
-                        I wanted to make a solution for generating tweets far easier than what I had been using.
-                        Later the idea started evolving into a more general purpose AI backed project.
-                        The goals of the project is to bring many AI tools to many people for free.
-                        However it does cost money to run this site and therefore there will be limits in place.
-                        Payment plans will be implemented for anyone who wishes to have unlimited use.
-                        My name is Arlen, I'm a 21 year old developer, on my last year of college. I'm also
-                        starting to freelance. Check out my links and get in touch!
+                        You can generate tweets using the power of AI! 
+                        The free tier does not allow any customization options. And will be limited to 100
+                        collective tweets per day. 
+                        If you would like to have access to the options, make sure to register an
+                        account for free and you will have access to 100 free tweets and threads. 
+                    ` }}</p>
+                    <p>{{ `
+                        You can view more information about the account and pricing in the about page!
                     ` }}</p>
                 </section>
                 <section class="footer-section">
@@ -42,6 +42,10 @@
                             <Icon name="ion:laptop" />
                             portfolio
                         </a>
+                        <NuxtLink href="/about">
+                            <Icon name="ion:help" />
+                            about
+                        </NuxtLink>
                     </div>
                 </section>
             </div>

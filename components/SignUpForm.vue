@@ -31,26 +31,36 @@
                 const client = useSupabaseAuthClient()
                 const router = useRouter()
 
+                async function signIn(user: any) {
+                    const {data, error} = await client.auth.signInWithPassword({
+                        email: user.email,
+                        password: user.password
+                    })
+
+                    user.email = ""
+                    user.password = ""
+
+                    if (error === null) {
+                        await router.push("/")
+                    }
+
+                    console.log(error)
+                }
+
                 if (this.signUp) {
-                    const error = await client.auth.signUp({
+                    const {data, error} = await client.auth.signUp({
                         email: this.email,
                         password: this.password
                     })
 
-                    this.email = ""
-                    this.password = ""
-                    this.signUp = false
-
                     console.log(error)
+
+                    let passed = await useFetch(`/api/add_user_data?userid=${data.user?.id}`)
+                    if (passed) {
+                        await signIn(this)
+                    }
                 } else {
-                    const error = await client.auth.signInWithPassword({
-                        email: this.email,
-                        password: this.password
-                    })
-
-                    await router.push("/")
-
-                    console.log(error)
+                   await signIn(this)
                 }
             },
             alreadyHave() {

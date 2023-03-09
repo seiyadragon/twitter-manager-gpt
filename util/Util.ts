@@ -10,6 +10,7 @@ export type Options = {
     hook: string,
     question: string,
     cta: string,
+    userid: string,
 }
 
 export const defaultOptions: Options = {
@@ -23,6 +24,7 @@ export const defaultOptions: Options = {
     hook: 'false',
     question: 'false',
     cta: 'false',
+    userid: '',
 }
 
 export type TweetData = {
@@ -44,6 +46,7 @@ export async function openAIFetch(prompt: string, options: Options) {
             &hook=${options.hook}
             &question=${options.question}
             &cta=${options.cta}
+            &userid=${options.userid}
     `.replaceAll('\n', '').replaceAll(/\s\s+/g, '')
 
     console.log(request)

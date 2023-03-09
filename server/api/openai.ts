@@ -2,18 +2,6 @@ import { Configuration, OpenAIApi } from "openai";
 import { defaultOptions, Options, openAIFetch } from '~~/util/Util';
 
 export default defineEventHandler(async (event) => {
-    let limitKey = process.env.LMTKEY
-    let {passed} = await $fetch(`/api/limiter?key=${limitKey}`)
-
-    if (!passed) 
-        return {
-            prompt: "Limit",
-            options: defaultOptions,
-            response: "The rate limit for the day has been reached!",
-        }
-
-    let openaiKey = process.env.OPENAIKEY
-
     let { 
         prompt, 
         hashtags, 
@@ -26,7 +14,20 @@ export default defineEventHandler(async (event) => {
         hook,
         question,
         cta,
+        userid,
     } = getQuery(event)
+
+    let limitKey = process.env.LMTKEY
+    let {passed, free} = await $fetch(`/api/limiter?key=${limitKey}&userid=${userid}`)
+
+    if (!passed) 
+        return {
+            prompt: "Limit",
+            options: defaultOptions,
+            response: "The rate limit for the day has been reached!",
+        }
+
+    let openaiKey = process.env.OPENAIKEY
 
     let props = getQuery(event)
 
@@ -34,6 +35,20 @@ export default defineEventHandler(async (event) => {
     let parsedLength = JSON.parse((length !== undefined && length !== null) ? length.toString() : '{"start": 140, "end": 280}')
 
     console.log(getQuery(event))
+    
+    if (free) {
+        hashtags = "false"
+        thread = "false"
+        emojis = "false"
+        temperature = "false" 
+        reply = "false" 
+        links = "false" 
+        length = "false"
+        hook = "false"
+        question = "false"
+        cta = "false"
+        length = defaultOptions.length
+    }
 
     let finalPrompt = `Write a 
         ${thread === 'true' ? 'twitter thread about' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
@@ -82,19 +97,6 @@ export default defineEventHandler(async (event) => {
         console.log(exception)
     }
 
-    /*const configuration = new Configuration({
-        apiKey: openaiKey,
-    });
-
-    const openai = new OpenAIApi(configuration)
-
-    const completion = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: finalPrompt,
-        max_tokens: thread === 'true' ? 1400 : 70,
-        temperature: parseInt(temperature as string),
-    });*/
-
     let finalResponse = chat.choices[0].message.content.toString()
 
     let removeNewlineSetting = ''
@@ -130,7 +132,7 @@ export default defineEventHandler(async (event) => {
     let result = {
         prompt: prompt,
         options: props,
-        response: finalResponse.replace(`${removeNewlineSetting}`, '') + (temperature === '1' ? ' 🔥 ' : ''),
+        response: finalResponse.replace(`${removeNewlineSetting}`, ''),
     }
 
     console.log(`Data: ${JSON.stringify(result)}`)

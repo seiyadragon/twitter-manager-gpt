@@ -7,24 +7,26 @@
     </div>
     <section>
         <Box title="Tweet">
-            <div class="box-flex">
-                <div>
-                    <Checkbox label="hashtags" @onTicked="(ticked) => tweetOptions.hashtags = ticked.toString()"/>
-                    <Checkbox label="emojis" @onTicked="(ticked) => tweetOptions.emojis = ticked.toString()"/>
-                    <Checkbox label="hook" @onTicked="(ticked) => tweetOptions.hook = ticked.toString()"/>
+            <div v-if="user !== null">
+                <div class="box-flex">
+                    <div>
+                        <Checkbox label="hashtags" @onTicked="(ticked) => tweetOptions.hashtags = ticked.toString()"/>
+                        <Checkbox label="emojis" @onTicked="(ticked) => tweetOptions.emojis = ticked.toString()"/>
+                        <Checkbox label="hook" @onTicked="(ticked) => tweetOptions.hook = ticked.toString()"/>
+                    </div>
+                    <div>
+                        <Checkbox label="thread" @onTicked="(ticked) => tweetOptions.thread = ticked.toString()"/>
+                        <Checkbox label="reply" @onTicked="(ticked) => tweetOptions.reply = ticked.toString()"/>
+                        <Checkbox label="question" @onTicked="(ticked) => tweetOptions.question = ticked.toString()"/>
+                    </div>
+                    <div>
+                        <Checkbox label="links" @onTicked="(ticked) => tweetOptions.links = ticked.toString()" />
+                        <Checkbox label="hot" @onTicked="(ticked) => ticked ? tweetOptions.temperature = '1' : tweetOptions.temperature = '0'"/>
+                        <Checkbox label="call to action" @onTicked="(ticked) => tweetOptions.cta = ticked.toString()"/>
+                    </div>
                 </div>
-                <div>
-                    <Checkbox label="thread" @onTicked="(ticked) => tweetOptions.thread = ticked.toString()"/>
-                    <Checkbox label="reply" @onTicked="(ticked) => tweetOptions.reply = ticked.toString()"/>
-                    <Checkbox label="question" @onTicked="(ticked) => tweetOptions.question = ticked.toString()"/>
-                </div>
-                <div>
-                    <Checkbox label="links" @onTicked="(ticked) => tweetOptions.links = ticked.toString()" />
-                    <Checkbox label="hot" @onTicked="(ticked) => ticked ? tweetOptions.temperature = '1' : tweetOptions.temperature = '0'"/>
-                    <Checkbox label="call to action" @onTicked="(ticked) => tweetOptions.cta = ticked.toString()"/>
-                </div>
+                <RangeSelector :min="1" :max="20" :initial="1" @valueChanged="(length: string) => tweetOptions.length = length"/>
             </div>
-            <RangeSelector :min="1" :max="20" :initial="1" @valueChanged="(length: string) => tweetOptions.length = length"/>
             <p>Type your tweet prompt here:</p>
             <div ref="textRef" :contenteditable="true" class="prompt" :value="promptText" @input="onPromptInput"/>
             <Button @click="onSubmitClick" :button-focus-color="buttonClickColor">
@@ -50,6 +52,39 @@
     import { defaultOptions, Options, openAIFetch, getPositiveNotification, getNegativeNotification, TweetData } from '~~/util/Util'
 
     export default {
+        setup() {
+            const user = useSupabaseUser()
+
+            return {
+                user,
+            }
+        },
+        data() {
+            return {
+                promptText: "",
+                responses: [] as Array<TweetData>,
+                buttonClickColor: "#0af",
+                tweetOptions: defaultOptions,
+                notificationList: [] as Array<{color: string, content: string}>,
+            }
+        },
+        mounted() {
+            if (process.client) {
+                let tweets = localStorage.getItem('tweets')
+                let tweetsParsed = JSON.parse(tweets !== null ? tweets : "[]")
+
+                if (tweetsParsed.length > 0) {
+                    this.responses = tweetsParsed
+                }
+            }
+
+            let user = useSupabaseUser()
+            let auth = useSupabaseAuthClient()
+
+            if (user.value !== null) {
+                this.tweetOptions.userid = user.value.id
+            }
+        },
         methods: {
             onPromptInput(event: any) {
                 this.promptText = event.target.innerText
@@ -169,25 +204,6 @@
             tweetNotification(notification: any) {
                 this.notificationList.push(notification)
             },
-        },
-        data() {
-            return {
-                promptText: "",
-                responses: [] as Array<TweetData>,
-                buttonClickColor: "#0af",
-                tweetOptions: defaultOptions,
-                notificationList: [] as Array<{color: string, content: string}>,
-            }
-        },
-        mounted() {
-            if (process.client) {
-                let tweets = localStorage.getItem('tweets')
-                let tweetsParsed = JSON.parse(tweets !== null ? tweets : "[]")
-
-                if (tweetsParsed.length > 0) {
-                    this.responses = tweetsParsed
-                }
-            }
         },
     }
 </script>
