@@ -66,9 +66,9 @@ export default defineEventHandler(async (event) => {
     console.log(finalPrompt)
 
     let systemRole = `
-        You are an exact clone of OpenAI's text-davinci-003 and you generate responses exactly like it! 
-        Your specific role is to create Twitter posts and it's very important that you follow the rules. 
-        Never use hashtags in the Tweet unless told to do so.
+        You write or edit user tweets, thread or replys based on what they choose in their prompt.
+        Make sure you sound slightly unproffessional, but not too much, and make it funny, when appropriate.
+        Focus on being understood by the common man.
     `.replaceAll('\n', '').replaceAll(/\s\s+/g, ' ')
 
     try {

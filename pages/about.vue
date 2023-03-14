@@ -7,6 +7,9 @@
             or the equivalent of 100 tweets or threads to start using the app
             when you create your account!
         ` }}</p>
+        <p>{{ `
+             
+        ` }}</p>
     </Box>
     <Filler :tweets="0" />
 </template>

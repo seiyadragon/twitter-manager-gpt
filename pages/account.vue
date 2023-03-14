@@ -3,6 +3,9 @@
         <Box :title="loggedIn ? 'Welcome' : 'Sign in!'">
             <div v-if="loggedIn">
                 <p>Balance: ${{ userbalance.toFixed(2) }} // {{ (userbalance / 0.05).toFixed(0) }} requests</p>
+                <Button button-focus-color="#0af" @buttonClick="($refs.stripeLink as HTMLAnchorElement).click()">
+                    <!--a ref="stripeLink" href="https://buy.stripe.com/9AQ156dFh7xg6s0eUU">Buy more tweets!</a-->
+                </Button>
                 <Button button-focus-color="#f30" @buttonClick="signOut">Sign out!</Button>
             </div>
             <div v-else>
