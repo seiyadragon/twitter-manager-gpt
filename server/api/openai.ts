@@ -50,10 +50,16 @@ export default defineEventHandler(async (event) => {
         length = defaultOptions.length
     }
 
-    let finalPrompt = `Write a 
-        ${thread === 'true' ? 'twitter thread about' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
+    let finalPrompt = prompt?.toString().replaceAll('\n', '').replaceAll(/\s\s+/g, ' ')
+
+    console.log(finalPrompt)
+
+    let systemRole = `
+        You write or edit user tweets, thread or replys based on what they choose in their prompt.
+        Your response should always try to match the tone of the prompt. 
+        Write a ${thread === 'true' ? 'twitter thread about' : `tweet ${question === 'true' ? 'asking about' : 'about'}`}
         ${reply === 'true' ? 'reply to the following' : ''} 
-        ${prompt}. Make sure you follow all the following rules. 
+        the prompt. Make sure you follow all the following rules. 
         ${hashtags === 'true' ? '' : 'DO NOT'} use hashtags, 
         ${emojis === 'true' ? '' : 'DO NOT'} use emojis. 
         ${links === 'true' ? '' : 'DO NOT'} use links. Make sure the length is between 
@@ -61,14 +67,6 @@ export default defineEventHandler(async (event) => {
         ${parsedLength.end} charcters if it's a thread. 
         ${hook === 'true' ? 'Make sure you start with a short, hooking line.' : ''} 
         ${cta ==='true' ? 'Add a call to action at the end!' : ''}
-    `.replaceAll('\n', '').replaceAll(/\s\s+/g, ' ')
-
-    console.log(finalPrompt)
-
-    let systemRole = `
-        You write or edit user tweets, thread or replys based on what they choose in their prompt.
-        Make sure you sound slightly unproffessional, but not too much, and make it funny, when appropriate.
-        Focus on being understood by the common man.
     `.replaceAll('\n', '').replaceAll(/\s\s+/g, ' ')
 
     try {
