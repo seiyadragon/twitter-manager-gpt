@@ -5,7 +5,7 @@
                 v-show="plugLoaded" 
                 ref="iframe" 
                 class="shameless-plug" 
-                src="https://arlenmolina.codes?scroll=65" 
+                src="https://wevolution.biz" 
                 :scrolling="plugExpanded ? 'yes' : 'no'" 
                 @load="onPlugLoad"
             />
